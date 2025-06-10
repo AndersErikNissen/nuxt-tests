@@ -3,14 +3,14 @@
     <div class="p-5 mb-5 bg-amber-950 text-amber-50 rounded-2xl">
       <pre>{{ progresses }}</pre>
     </div>
-    <div class="flex overflow-x-scroll items-end pb-5" ref="scroller">
+    <div class="flex overflow-x-scroll items-end pb-5 bg-amber-50 rounded-2xl" ref="scroller">
       <div
-        v-for="(item, index) in data.items"
+        v-for="(item, index) in items"
         :key="item.title"
         class="item sticky left-0 bg-amber-50 rounded-2xl"
         :class="{ scaleable: index > 0, 'flex-[0_0_60%]': index === 0 }"
         :style="[
-          index !== data.items.length - 1 ? '--progress-next:' + progresses[index] : '',
+          index !== items.length - 1 ? '--progress-next:' + progresses[index] : '',
           index > 0 ? '--progress:' + progresses[index - 1] : '',
         ]"
         ref="item"
@@ -33,38 +33,16 @@
 </template>
 
 <script setup>
-const data = {
-  items: [
-    {
-      img: "https://images.unsplash.com/photo-1748882145961-536cc88fd117?q=80&w=2624&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      type: "Article",
-      date: "25. November, 2024",
-      title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam efficitur scelerisque magna eu feugiat.",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1714418880871-22643a62660e?q=80&w=3648&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      type: "News",
-      date: "13. January, 2022",
-      title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam efficitur scelerisque magna eu feugiat.",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1716149118354-2a9c46f26779?q=80&w=3987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      type: "News",
-      date: "09. May, 2023",
-      title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam efficitur scelerisque magna eu feugiat.",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1714418880871-22643a62660e?q=80&w=3648&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      type: "Article",
-      date: "18. February, 2022",
-      title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam efficitur scelerisque magna eu feugiat.",
-    },
-  ],
-};
+const props = defineProps({
+  items: {
+    type: Array,
+    default: [],
+  },
+});
 
 const scrollerRef = useTemplateRef("scroller");
 const itemRefs = useTemplateRef("item");
-const progresses = ref(data.items.map(() => 0).slice(1)); // slice since we don't need a progress for the first item
+const progresses = ref(props.items.map(() => 0).slice(1)); // slice since we don't need a progress for the first item
 const index = ref(0);
 
 function updateProgress() {
@@ -103,7 +81,8 @@ onMounted(() => {
       flex-basis: calc(40% + ((var(--progress, 0) / 10 * 2 * 1%)));
 
       .item__text-scaleable {
-        min-height: calc((1em * (2 / 1.5)) * 3);
+        min-height: calc((1em * (2 / 1.5)) * 2); /* a bit of "cheating" to avoid the layout shifting, when scaling... */
+
         font-size: calc(1em * calc(0.5 + (var(--progress, 0) * 0.005)));
       }
     }

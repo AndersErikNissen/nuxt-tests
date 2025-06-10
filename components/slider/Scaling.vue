@@ -1,5 +1,12 @@
 <template>
   <div class="c-slider-scaling" ref="component">
+    <h2 class="text-4xl my-5">Slider: Scaling</h2>
+    <NuxtLink
+      class="block underline underline-offset-2 my-3 text-blue-400"
+      target="_blank"
+      to="https://github.com/AndersErikNissen/nuxt-tests"
+      >REPO</NuxtLink
+    >
     <div class="p-5 mb-5 bg-amber-950 text-amber-50 rounded-2xl">
       <pre>{{ progresses }}</pre>
     </div>
